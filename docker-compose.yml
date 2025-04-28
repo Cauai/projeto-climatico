@@ -1,0 +1,40 @@
+version: '3.8'  # Versão do docker-compose. 3.8 é estável e suporta recursos modernos.
+
+services:  # Aqui definimos os serviços que vamos subir
+
+  zookeeper:  # Primeiro, precisamos do Zookeeper para gerenciar o Kafka internamente.
+    image: confluentinc/cp-zookeeper:latest  # Imagem oficial do Zookeeper fornecida pela Confluent.
+    container_name: zookeeper  # Nome do container para facilitar identificação.
+    environment:  # Variáveis de ambiente específicas para o Zookeeper
+      ZOOKEEPER_CLIENT_PORT: 2181  # Porta padrão que o Kafka vai usar para se comunicar com o Zookeeper.
+      ZOOKEEPER_TICK_TIME: 2000  # (opcional) Tempo de sincronização interna entre servidores (não precisa alterar).
+    ports:
+      - "2181:2181"  # Expõe a porta 2181 do container para o host.
+
+  kafka:  # Serviço do Kafka Broker.
+    image: confluentinc/cp-kafka:latest  # Imagem oficial do Kafka Broker.
+    container_name: kafka  # Nome do container.
+    depends_on:
+      - zookeeper  # Kafka depende do Zookeeper, então o compose sobe primeiro o Zookeeper.
+    environment:  # Variáveis de configuração do Kafka.
+      KAFKA_BROKER_ID: 1  # ID único do broker (importante se escalar para múltiplos brokers depois).
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Kafka precisa saber onde o Zookeeper está rodando.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Endereço onde outros serviços vão encontrar o Kafka.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Fator de replicação dos tópicos (1 = sem redundância; ok para testes locais).
+    ports:
+      - "9092:9092"  # Expõe a porta 9092 para você conseguir conectar pelo localhost.
+
+  postgres:  # Serviço do banco de dados PostgreSQL.
+    image: postgres:13  # Imagem oficial do PostgreSQL (versão 13).
+    container_name: postgres  # Nome do container.
+    environment:  # Configurações básicas para inicializar o PostgreSQL.
+      POSTGRES_USER: postgres  # Usuário admin.
+      POSTGRES_PASSWORD: senha123  # Senha do usuário (escolha uma mais segura se quiser).
+      POSTGRES_DB: weather_db  # Banco de dados que será criado ao inicializar o container.
+    ports:
+      - "5432:5432"  # Expondo a porta padrão do PostgreSQL para acesso local.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Volume persistente para armazenar dados mesmo se o container parar.
+
+volumes:  # Volumes são usados para persistência de dados (evitar que dados se percam se o container for destruído).
+  postgres_data:
