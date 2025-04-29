@@ -19,7 +19,7 @@ services:  # Aqui definimos os serviços que vamos subir
     environment:  # Variáveis de configuração do Kafka.
       KAFKA_BROKER_ID: 1  # ID único do broker (importante se escalar para múltiplos brokers depois).
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Kafka precisa saber onde o Zookeeper está rodando.
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Endereço onde outros serviços vão encontrar o Kafka.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Endereço onde outros serviços vão encontrar o Kafka.
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Fator de replicação dos tópicos (1 = sem redundância; ok para testes locais).
     ports:
       - "9092:9092"  # Expõe a porta 9092 para você conseguir conectar pelo localhost.
