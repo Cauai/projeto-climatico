@@ -45,7 +45,7 @@ def main():
         else:
             print(f"[{datetime.now()}] Nenhum evento enviado (falha na API)")
 
-        time.sleep(10)  # A cada 5 minutos
+        time.sleep(300)  # A cada 5 minutos
 
 if __name__ == "__main__":
     main()
