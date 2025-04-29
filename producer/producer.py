@@ -2,7 +2,7 @@ import requests
 from kafka import KafkaProducer
 import json
 import time
-from datetime import timezone
+from datetime import datetime, timezone
 
 API_KEY = "9554eca1ad38c35f45caaabe487f8fdc"
 
@@ -21,8 +21,7 @@ def fetch_weather_data():
         data = response.json()
         event = {
             "station_name": data["name"],
-            "event_timestamp": datetime.fromtimestamp(data["dt"], tz=timezone.utc)
-,
+            "event_timestamp": datetime.fromtimestamp(data["dt"], tz=timezone.utc).isoformat(),
             "temperature": data["main"]["temp"],
             "humidity": data["main"]["humidity"],
             "wind_speed": data["wind"]["speed"]
