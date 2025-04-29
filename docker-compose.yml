@@ -24,17 +24,14 @@ services:  # Aqui definimos os serviços que vamos subir
     ports:
       - "9092:9092"  # Expõe a porta 9092 para você conseguir conectar pelo localhost.
 
-  postgres:  # Serviço do banco de dados PostgreSQL.
-    image: postgres:13  # Imagem oficial do PostgreSQL (versão 13).
-    container_name: postgres  # Nome do container.
-    environment:  # Configurações básicas para inicializar o PostgreSQL.
-      POSTGRES_USER: postgres  # Usuário admin.
-      POSTGRES_PASSWORD: senha123  # Senha do usuário (escolha uma mais segura se quiser).
-      POSTGRES_DB: weather_db  # Banco de dados que será criado ao inicializar o container.
+  postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: weather_db
     ports:
-      - "5432:5432"  # Expondo a porta padrão do PostgreSQL para acesso local.
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Volume persistente para armazenar dados mesmo se o container parar.
-
-volumes:  # Volumes são usados para persistência de dados (evitar que dados se percam se o container for destruído).
-  postgres_data:
+      - ./database/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
