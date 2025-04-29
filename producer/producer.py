@@ -21,7 +21,7 @@ def fetch_weather_data():
         data = response.json()
         event = {
             "station_name": data["name"],
-            "event_timestamp": datetime.utcfromtimestamp(data["dt"]).isoformat(),
+            "event_timestamp": datetime.fromtimestamp(data["dt"], tz=datetime.UTC).isoformat(),
             "temperature": data["main"]["temp"],
             "humidity": data["main"]["humidity"],
             "wind_speed": data["wind"]["speed"]
