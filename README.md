@@ -46,7 +46,7 @@ O PostgreSQL já será inicializado com a tabela `weather_events`.
 python -m venv .venv
 
 # Ativar no Windows PowerShell
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\activate.bat
 ```
 
 Você verá seu terminal assim:
