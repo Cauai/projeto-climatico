@@ -42,13 +42,11 @@ df_parsed = (
 )
 
 # 5. Mostra os dados em tempo real no console
-query = (
-    df_parsed.writeStream
-    .outputMode("append")          # Apenas adiciona novas linhas
-    .format("console")             # Mostra no terminal
-    .option("truncate", False)     # Não corta colunas
-    .start()                       # Inicia o streaming
-)
+query = df_parsed.writeStream \
+    .format("console") \
+    .outputMode("append") \
+    .trigger(processingTime="1 minute") \
+    .start()
 
 # 6. Mantém a aplicação rodando
 query.awaitTermination()
