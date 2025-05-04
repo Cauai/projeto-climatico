@@ -65,12 +65,12 @@ def save_to_postgres(batch_df, batch_id):
         print(f"❌ Erro ao salvar no PostgreSQL: {e}")
 
 
-# 5. Mostra os dados em tempo real no console
+# 6. Mostra os dados em tempo real no console
 query = df_parsed.writeStream \
-    .format("console") \
+    .foreachBatch(save_to_postgres) \
     .outputMode("append") \
     .trigger(processingTime="1 minute") \
     .start()
 
-# 6. Mantém a aplicação rodando
+# 7. Mantém a aplicação rodando
 query.awaitTermination()
