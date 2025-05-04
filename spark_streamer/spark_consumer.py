@@ -47,7 +47,7 @@ df_parsed = (
 def save_to_postgres(batch_df, batch_id):
     try:
         now = datetime.now()
-        print(f"🟡 Iniciando escrita do batch {batch_id} às {now}")
+        print(f"Iniciando escrita do batch {batch_id} às {now}")
 
         batch_df.withColumn("created_at", current_timestamp()) \
             .write \
@@ -60,9 +60,9 @@ def save_to_postgres(batch_df, batch_id):
             .mode("append") \
             .save()
 
-        print(f"✅ Batch {batch_id} salvo no PostgreSQL às {datetime.now()}")
+        print(f"Batch {batch_id} salvo no PostgreSQL às {datetime.now()}")
     except Exception as e:
-        print(f"❌ Erro ao salvar no PostgreSQL: {e}")
+        print(f"Erro ao salvar no PostgreSQL: {e}")
 
 
 # 6. Mostra os dados em tempo real no console
