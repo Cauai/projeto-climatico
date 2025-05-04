@@ -1,5 +1,10 @@
 # 🌦️ Projeto de Pipeline Climático com Kafka, Spark e PostgreSQL
 
+
+<p align="center">
+  <img src="images/tols.png">
+</p>
+
 Este projeto demonstra como criar um pipeline de dados em tempo real utilizando **Apache Kafka**, **Apache Spark**, **PostgreSQL** e **Docker**, consumindo dados reais da API do OpenWeatherMap sobre o clima em **São Paulo**. O objetivo é simular uma arquitetura robusta de ingestão e processamento de eventos meteorológicos.
 
 ---
@@ -21,7 +26,7 @@ Este projeto demonstra como criar um pipeline de dados em tempo real utilizando 
 
 ## 📌 Arquitetura do Projeto
 
-<h3 align="center">📊 Arquitetura do Pipeline Climático</h3>
+<h3 align="center">📊 Arquitetura do Pipeline</h3>
 
 <p align="center">
   <img src="images/arquitetura.png" alt="Diagrama da Arquitetura" width="80%">
