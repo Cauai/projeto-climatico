@@ -21,6 +21,7 @@ schema = (
     .add("temperature", DoubleType())        # Temperatura em Celsius
     .add("humidity", DoubleType())           # Umidade relativa (%)
     .add("wind_speed", DoubleType())         # Velocidade do vento (m/s)
+    .add("precipitation",DoubleType())
 )
 
 # 3. Lê os dados do tópico 'weather' no Kafka
