@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="images/tols.png">
+  <img src="images/tools.png">
 </p>
 
 Este projeto demonstra como criar um pipeline de dados em tempo real utilizando **Apache Kafka**, **Apache Spark**, **PostgreSQL** e **Docker**, consumindo dados reais da API do OpenWeatherMap sobre o clima em **São Paulo**. O objetivo é simular uma arquitetura robusta de ingestão e processamento de eventos meteorológicos.
