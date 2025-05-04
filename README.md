@@ -21,20 +21,11 @@ Este projeto demonstra como criar um pipeline de dados em tempo real utilizando 
 
 ## 📌 Arquitetura do Projeto
 
-```mermaid
-flowchart TD
-    A[API OpenWeatherMap]
-    B[Kafka Producer (Python)]
-    C[Kafka Broker (Docker)]
-    D[Spark Structured Streaming (PySpark)]
-    E[PostgreSQL (Tabela: weather_events)]
+<h3 align="center">📊 Arquitetura do Pipeline Climático</h3>
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-```
-
+<p align="center">
+  <img src="images/arquitetura.png" alt="Diagrama da Arquitetura" width="80%">
+</p>
 
 ---
 
@@ -166,7 +157,7 @@ projeto-climatico/
 
 ---
 
-## 💡 Próximas Melhorias
+## 💡 Possiveis Melhorias
 
 - Dockerizar o Spark e o Producer
 - Criar visualização interativa com Streamlit ou Grafana
@@ -174,13 +165,3 @@ projeto-climatico/
 - Expandir para múltiplas cidades ou sensores simulados
 
 ---
-
-## 🤝 Contribuição
-
-Pull requests são bem-vindos! Para mudanças grandes, abra uma issue primeiro para discutir o que você gostaria de modificar.
-
----
-
-## 📜 Licença
-
-MIT © 2025 - Cauai Capozzoli
