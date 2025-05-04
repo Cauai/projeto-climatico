@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession # type: ignore
 from pyspark.sql.functions import from_json, col # type: ignore
 from pyspark.sql.types import StructType, StringType, DoubleType # type: ignore
-
+from datetime import datetime
 # 1. Criação da SparkSession (ponto de entrada do Spark)
 spark = (
     SparkSession.builder
@@ -41,6 +41,27 @@ df_parsed = (
     .select(from_json(col("json_str"), schema).alias("data"))        # Aplica o schema
     .select("data.*")                                                # Expande as colunas
 )
+
+
+# 5. Função para salvar no PostgreSQL com log e timestamp
+def save_to_postgres(batch_df, batch_id):
+    # Adiciona coluna de salvamento
+    batch_df = batch_df.withColumn("created_at", current_timestamp())
+
+    # Log
+    print(f"\n🟢 [Batch {batch_id}] {datetime.now()} - Salvando {batch_df.count()} registro(s) no PostgreSQL")
+    batch_df.select("station_name", "event_timestamp", "created_at").show(truncate=False)
+
+    # Escrita no banco
+    batch_df.write \
+        .format("jdbc") \
+        .option("url", "jdbc:postgresql://localhost:5432/weather_db") \
+        .option("dbtable", "weather_events") \
+        .option("user", "postgres") \
+        .option("password", "postgres") \
+        .option("driver", "org.postgresql.Driver") \
+        .mode("append") \
+        .save()
 
 # 5. Mostra os dados em tempo real no console
 query = df_parsed.writeStream \
