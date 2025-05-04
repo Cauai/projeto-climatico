@@ -1,21 +1,60 @@
-# Projeto de Streaming de Dados Climáticos 🌦️
+# 🌦️ Projeto de Pipeline Climático com Kafka, Spark e PostgreSQL
 
-Este projeto simula o envio de dados meteorológicos em tempo real usando Apache Kafka, Python e PostgreSQL, tudo orquestrado com Docker Compose.
-
----
-
-## 🛠️ Tecnologias utilizadas
-
-- **Python 3.10+**
-- **Apache Kafka**
-- **PostgreSQL**
-- **Docker + Docker Compose**
-- **Kafka-Python** (producer e consumer)
-- **psycopg2-binary** (conexão PostgreSQL)
+Este projeto demonstra como criar um pipeline de dados em tempo real utilizando **Apache Kafka**, **Apache Spark**, **PostgreSQL** e **Docker**, consumindo dados reais da API do OpenWeatherMap sobre o clima em **São Paulo**. O objetivo é simular uma arquitetura robusta de ingestão e processamento de eventos meteorológicos.
 
 ---
 
-## 🚀 Como executar o projeto
+## 🔧 Tecnologias Utilizadas
+
+- [Python 3.10+](https://www.python.org/)
+- [Apache Kafka](https://kafka.apache.org/)
+- [Apache Spark](https://spark.apache.org/)
+- [PostgreSQL 13+](https://www.postgresql.org/)
+- [Docker + Docker Compose](https://www.docker.com/)
+- Bibliotecas Python:
+  - `kafka-python`
+  - `requests`
+  - `psycopg2-binary`
+  - `pyspark`
+
+---
+
+## 📌 Arquitetura do Projeto
+
+```mermaid
+flowchart TD
+    A[API OpenWeatherMap] --> B[Kafka Producer (Python)]
+    B --> C[Kafka Broker (Docker)]
+    C --> D[Spark Structured Streaming (PySpark)]
+    D --> E[PostgreSQL (Tabela: weather_events)]
+
+    style A fill:#e3f2fd,stroke:#2196f3
+    style B fill:#fff3e0,stroke:#fb8c00
+    style C fill:#f3e5f5,stroke:#9c27b0
+    style D fill:#e8f5e9,stroke:#4caf50
+    style E fill:#ede7f6,stroke:#673ab7
+```
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### ✅ Forma Rápida (Windows)
+
+Você pode iniciar todo o projeto diretamente com o script:
+
+```bash
+init.bat
+```
+
+Esse script realiza os seguintes passos:
+- Ativa o ambiente virtual `.venv`
+- Instala as dependências necessárias
+- Sobe os containers com Docker
+- Executa o `producer.py`
+- Abre um terminal à parte para você rodar o Spark Consumer
+
+---
 
 ### 1. Clonar o repositório
 
@@ -24,118 +63,123 @@ git clone https://github.com/seu-usuario/projeto-climatico.git
 cd projeto-climatico
 ```
 
-### 2. Subir os serviços com Docker Compose
+### 2. Subir os serviços com Docker
 
 ```bash
 docker-compose up -d
 ```
 
-Este comando irá iniciar:
-- Zookeeper
-- Kafka Broker
-- PostgreSQL (Banco `weather_db`)
-
-O PostgreSQL já será inicializado com a tabela `weather_events`.
+Este comando irá iniciar os seguintes containers:
+- Apache Zookeeper (porta 2181)
+- Apache Kafka Broker (porta 9092)
+- PostgreSQL com o banco `weather_db` e a tabela `weather_events` já criados via script SQL.
 
 ---
 
-### 3. Criar e ativar o ambiente virtual no VSCode
+### 3. Criar ambiente virtual e instalar dependências
 
 ```bash
-# Criar o ambiente
 python -m venv .venv
-
-# Ativar no Windows PowerShell
-.\.venv\Scripts\activate.bat
+.\.venv\Scripts\activate  # Windows
+# ou
+source .venv/bin/activate  # Linux/Mac
 ```
 
-Você verá seu terminal assim:
-```
-(.venv) C:\Users\SeuUsuario\projeto-climatico>
-```
-
----
-
-### 4. Instalar as dependências Python
+Instalar as dependências:
 
 ```bash
-pip install kafka-python psycopg2-binary
+pip install -r requirements.txt
+pip install -r spark_requirements.txt
 ```
 
-Opcionalmente, gerar o arquivo de dependências:
+---
+
+### 4. Rodar o Kafka Producer (enviando dados da API)
 
 ```bash
-pip freeze > requirements.txt
+python producer.py
 ```
+
+Este script envia dados climáticos reais de São Paulo a cada 5 minutos para o tópico Kafka `weather`.
 
 ---
 
-### 5. Rodar o Producer (envio de dados climáticos para o Kafka)
+### 5. Rodar o Spark Structured Streaming Consumer
 
 ```bash
-python producer/producer.py
+spark-submit spark_consumer.py
 ```
 
-O `producer.py` irá:
-- Gerar dados sintéticos de clima
-- Enviar eventos para o tópico Kafka chamado `weather` a cada 5 segundos
-
-Exemplo de mensagem enviada:
-```json
-{
-  "station_name": "Estacao_Sao_Paulo",
-  "event_timestamp": "2025-04-28T21:00:12.345678",
-  "temperature": 26.5,
-  "humidity": 70.0,
-  "precipitation": 0.0,
-  "wind_speed": 15.2
-}
-```
+Esse script:
+- Lê os dados do tópico `weather` do Kafka
+- Converte os JSONs para DataFrame estruturado
+- Escreve no PostgreSQL em modo `append`, com `created_at`
 
 ---
 
-### 6. Rodar o Consumer (opcional - em construção)
+## 📊 Estrutura da Tabela PostgreSQL
 
-O consumer irá:
-- Ler os eventos do Kafka
-- Inserir os dados automaticamente no banco `weather_db` na tabela `weather_events`
+A tabela `weather_events` é criada automaticamente ao subir o container. Estrutura:
 
-(Em breve...)
+| Coluna          | Tipo              |
+|-----------------|-------------------|
+| station_name    | VARCHAR            |
+| event_timestamp | TIMESTAMP          |
+| temperature     | DOUBLE PRECISION   |
+| humidity        | DOUBLE PRECISION   |
+| precipitation   | DOUBLE PRECISION   |
+| wind_speed      | DOUBLE PRECISION   |
+| created_at      | TIMESTAMP          |
 
 ---
 
-## 📂 Estrutura do projeto
+## 📁 Estrutura de Pastas
 
 ```bash
 projeto-climatico/
-│
 ├── docker-compose.yml
-├── database/
-│   └── create_tables.sql
-├── producer/
-│   └── producer.py
-├── consumer/          # (a ser criado)
-│   └── consumer.py
-├── .venv/             # Ambiente virtual
+├── create_tables.sql
+├── producer.py
+├── spark_consumer.py
 ├── requirements.txt
+├── spark_requirements.txt
+├── .gitignore
+├── init.bat
 └── README.md
 ```
 
 ---
 
-## 📋 Observações
+## 🧪 Exemplo de Evento Kafka
 
-- A tabela `weather_events` é criada automaticamente na primeira subida do container PostgreSQL.
-- Certifique-se de que o ambiente virtual `.venv` esteja ativado antes de rodar os scripts Python.
-- No DBeaver, desative o SSL para conectar ao banco PostgreSQL local.
-- Kafka e Zookeeper devem estar rodando para que o Producer e Consumer funcionem corretamente.
+```json
+{
+  "station_name": "Sao Paulo",
+  "event_timestamp": "2025-05-04T12:00:00-03:00",
+  "temperature": 24.5,
+  "humidity": 78,
+  "precipitation": 0.0,
+  "wind_speed": 3.1
+}
+```
+
+---
+
+## 💡 Próximas Melhorias
+
+- Dockerizar o Spark e o Producer
+- Criar visualização interativa com Streamlit ou Grafana
+- Adicionar camada de monitoramento e alertas
+- Expandir para múltiplas cidades ou sensores simulados
 
 ---
 
-## 🔥 Próximos passos
+## 🤝 Contribuição
 
-- Criar o `consumer.py` para integrar o Kafka ao PostgreSQL.
-- Implementar monitoramento básico dos fluxos.
-- (Opcional) Dockerizar a aplicação Python para rodar Producer/Consumer em containers também.
+Pull requests são bem-vindos! Para mudanças grandes, abra uma issue primeiro para discutir o que você gostaria de modificar.
 
 ---
+
+## 📜 Licença
+
+MIT © 2025 - Cauai Capozzoli
