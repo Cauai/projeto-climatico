@@ -21,20 +21,18 @@ Este projeto demonstra como criar um pipeline de dados em tempo real utilizando 
 
 ## 📌 Arquitetura do Projeto
 
-## 📌 Arquitetura do Projeto
-
 ```mermaid
 flowchart TD
-    A[API OpenWeatherMap] --> B[Kafka Producer (Python)]
-    B --> C[Kafka Broker (Docker)]
-    C --> D[Spark Structured Streaming (PySpark)]
-    D --> E[PostgreSQL (Tabela: weather_events)]
+    A[API OpenWeatherMap]
+    B[Kafka Producer (Python)]
+    C[Kafka Broker (Docker)]
+    D[Spark Structured Streaming (PySpark)]
+    E[PostgreSQL (Tabela: weather_events)]
 
-    style A fill:#e3f2fd,stroke:#2196f3
-    style B fill:#fff3e0,stroke:#fb8c00
-    style C fill:#f3e5f5,stroke:#9c27b0
-    style D fill:#e8f5e9,stroke:#4caf50
-    style E fill:#ede7f6,stroke:#673ab7
+    A --> B
+    B --> C
+    C --> D
+    D --> E
 ```
 
 
