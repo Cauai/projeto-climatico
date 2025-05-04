@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession # type: ignore
 from pyspark.sql.functions import from_json, col # type: ignore
 from pyspark.sql.types import StructType, StringType, DoubleType # type: ignore
+from pyspark.sql.functions import from_json, col, current_timestamp  # type: ignore
+
 from datetime import datetime
 # 1. Criação da SparkSession (ponto de entrada do Spark)
 spark = (
