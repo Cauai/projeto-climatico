@@ -7,7 +7,7 @@ Este projeto demonstra como criar um pipeline de dados em tempo real utilizando 
 <p align="center">
   <img src="images/tools.png">
 </p>
----
+
 
 ## 🔧 Tecnologias Utilizadas
 
