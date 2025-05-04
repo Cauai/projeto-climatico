@@ -21,6 +21,8 @@ Este projeto demonstra como criar um pipeline de dados em tempo real utilizando 
 
 ## 📌 Arquitetura do Projeto
 
+## 📌 Arquitetura do Projeto
+
 ```mermaid
 flowchart TD
     A[API OpenWeatherMap] --> B[Kafka Producer (Python)]
@@ -34,6 +36,7 @@ flowchart TD
     style D fill:#e8f5e9,stroke:#4caf50
     style E fill:#ede7f6,stroke:#673ab7
 ```
+
 
 ---
 
