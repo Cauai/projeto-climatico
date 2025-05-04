@@ -2,6 +2,7 @@ from pyspark.sql import SparkSession # type: ignore
 from pyspark.sql.functions import from_json, col # type: ignore
 from pyspark.sql.types import StructType, StringType, DoubleType # type: ignore
 from pyspark.sql.functions import from_json, col, current_timestamp  # type: ignore
+from pyspark.sql.functions import to_timestamp
 
 from datetime import datetime
 # 1. Criação da SparkSession (ponto de entrada do Spark)
@@ -42,6 +43,7 @@ df_parsed = (
     .selectExpr("CAST(value AS STRING) AS json_str")                 # Converte para string
     .select(from_json(col("json_str"), schema).alias("data"))        # Aplica o schema
     .select("data.*")                                                # Expande as colunas
+    .withColumn("event_timestamp", to_timestamp(col("event_timestamp")))
 )
 
 
