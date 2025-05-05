@@ -133,16 +133,40 @@ A tabela `weather_events` é criada automaticamente ao subir o container. Estrut
 ## 📁 Estrutura de Pastas
 
 ```bash
-projeto-climatico/
-├── docker-compose.yml
-├── create_tables.sql
-├── producer.py
-├── spark_consumer.py
-├── requirements.txt
-├── spark_requirements.txt
+PROJETO-CLIMATICO/
+│
+├── .venv/
+├── database/
+│   └── create_tables.sql
+│
+├── images/
+│   ├── arquitetura.png
+│   └── tools.png
+│
+├── producer/
+│   ├── __init__.py
+│   └── producer.py
+│
+├── spark_streamer/
+│   ├── __init__.py
+│   └── spark_consumer.py
+│
+├── testes/
+│   └── testes.ipynb
+│
+├── utils/
+│   ├── api_cliente.py
+│   ├── db_config.py
+│   └── kafka_config.py
+│
+├── .env
 ├── .gitignore
+├── docker-compose.yml
 ├── init.bat
-└── README.md
+├── README.md
+├── requirements.txt
+└── spark_requirements.txt
+
 ```
 
 ---
